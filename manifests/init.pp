@@ -5,6 +5,7 @@ class nginx (
   $install_dir      = '/opt/nginx',
   $cert_dir         = '/opt/nginx/sslcert',
   $log_dir          = '/var/log/nginx',
+  $status_url       = '/server-status',
 ) {
   $nginx_uid        = 104
   $nginx_gid        = 107
@@ -35,12 +36,21 @@ class nginx (
     mode            => 655,
   }
 
-  file { "${conf_dir}/0_params.conf" :
+  file { "${conf_dir}/000_params.conf" :
     ensure          => present,
     owner           => "${nginx_uid}",
     group           => "${nginx_gid}",
     mode            => 644,
     source          => "puppet:///modules/nginx/conf/params.conf",
+    require         => File["${conf_dir}"],
+    notify          => Docker::Run["nginx"], 
+  }
+  file { "${conf_dir}/100_localhost.conf" :
+    ensure          => present,
+    owner           => "${nginx_uid}",
+    group           => "${nginx_gid}",
+    mode            => 644,
+    content         => template('nginx/conf/localhost.conf.erb'),
     require         => File["${conf_dir}"],
     notify          => Docker::Run["nginx"], 
   }

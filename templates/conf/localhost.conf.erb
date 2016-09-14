@@ -1,0 +1,16 @@
+server {
+  listen 80;
+  ssl off;
+
+  allow 172.16.0.0/12;
+  deny all;
+
+  server_name localhost;
+
+  location <%= scope['nginx::status_url'] %> {
+    stub_status;
+  }
+
+  access_log   /var/log/nginx/localhost-access.log combined_duration;
+  error_log    /var/log/nginx/localhost-error.log;
+}
