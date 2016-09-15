@@ -1,6 +1,7 @@
 class nginx (
   $image            = 'nginx',
   $version          = '1.11.3',
+  $container_name   = 'nginx',
   $network,
   $install_dir      = '/opt/nginx',
   $cert_dir         = '/opt/nginx/sslcert',
@@ -55,7 +56,7 @@ class nginx (
     notify          => Docker::Run["nginx"], 
   }
 
-  docker::run { 'nginx':
+  docker::run { "${container_name}" :
     image           => "${image}:${version}",
     hostname        => 'nginx',
     ports           => ['80:80', '443:443'],
@@ -68,5 +69,13 @@ class nginx (
     require       => [File["${install_dir}"],
       File["${cert_dir}"], File["${log_dir}"]
     ]
+  }
+
+  file { "/etc/logrotate.d/${container_name}" :
+    ensure          => present,
+    owner           => 'root',
+    group           => 'root',
+    mode            => 644,
+    content         => template('nginx/logrotate/nginx.erb'),
   } 
 }

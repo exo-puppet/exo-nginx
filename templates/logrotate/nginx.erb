@@ -1,0 +1,17 @@
+# ###################################
+# This file is managed by puppet
+# PLEASE DON'T MODIFY BY HAND
+# ###################################
+ 
+<%= scope.lookupvar('nginx::log_dir') %>/*.log {
+    daily
+    rotate 365
+    compress
+    dateext
+    missingok
+    notifempty
+    sharedscripts
+    postrotate
+        /usr/bin/docker exec <%= scope['nginx::container_name'] %> service nginx reload
+    endscript
+}
