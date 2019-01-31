@@ -1,15 +1,14 @@
+# catch all default server
 server {
   listen 80;
   ssl off;
 
-  allow 172.16.0.0/12;
-  deny all;
+  server_name localhost
+              _
+              "";
 
-  server_name localhost;
-
-  location <%= scope['nginx::status_url'] %> {
-    stub_status;
-  }
+  # A non-standard status code used to instruct nginx to close the connection without sending a response to the client, most commonly used to deny malicious or malformed requests.
+  return 444;
 
   access_log   /var/log/nginx/localhost-access.log combined_duration;
   error_log    /var/log/nginx/localhost-error.log;

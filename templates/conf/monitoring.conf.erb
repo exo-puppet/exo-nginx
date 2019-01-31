@@ -1,0 +1,13 @@
+# virtual-host dedicated to monitoring
+server {
+  listen 81 default_server;
+  server_name localhost;
+  ssl off;
+
+  location <%= @monitoring_status_url %> {
+    stub_status;
+  }
+
+  access_log off;
+  error_log  /var/log/nginx/localhost_status-error.log;
+}
