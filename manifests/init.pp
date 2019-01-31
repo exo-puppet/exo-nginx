@@ -1,6 +1,6 @@
 class nginx (
   $image            = 'nginx',
-  $version          = '1.11.3',
+  $version          = '1.14.2',
   $container_name   = 'nginx',
   $network,
   $install_dir      = '/opt/nginx',
